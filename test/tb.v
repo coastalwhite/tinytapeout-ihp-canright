@@ -42,6 +42,7 @@ module tb ();
   end
 
   integer i;
+  reg [7:0] masked_data_o;
   wire [ 256 * 8 - 1 : 0] SBOX_LUT;
   assign SBOX_LUT = {
 	//  0     1     2     3     4     5     6     7     8     9     a     b     c     d     e     f
@@ -77,15 +78,55 @@ module tb ();
 
 	  for (i = 0; i < 256; i = i + 1) begin
 		  #10
-          uio_in = 8'b01;
+          uio_in = 8'b0001;
 		  ui_in = i;
-          #10
-		  uio_in = 8'b11;
+          #10 // Trigger execution
+          uio_in[7] = 1;
+          #10 // Get the sbox out as the output.
+          uio_in[3:0] = 4'b1000;
 		  #10
           if (uo_out != SBOX_LUT[2047 - 8*i-:8]) begin
-            $display("ASSERTION FAILED in %m: uo_out != SBOX_LUT");
+            $display("ASSERTION FAILED: uo_out != SBOX_LUT");
             $finish(1);
           end
+          uio_in[7] = 0;
+	  end
+
+      #10
+      uio_in = 8'b0011;
+      ui_in = 8'h42;
+      #10
+      uio_in = 8'b0100;
+      ui_in = 8'h13;
+      #10
+      uio_in = 8'b0101;
+      ui_in = 8'h37;
+      #10
+      uio_in = 8'b0110;
+      ui_in = 8'h15;
+      #10
+
+	  for (i = 0; i < 256; i = i + 1) begin
+		  #50
+          uio_in = 8'b0001;
+		  ui_in = i ^ 8'h42;
+
+          #10 // Trigger execution
+          uio_in[6] = 1;
+
+          #10 // Get the masked sbox out as the output.
+          uio_in[3:0] = 4'b1001;
+
+          #10 // Get the masked sbox out mask as the output.
+          masked_data_o = uo_out;
+          uio_in[3:0] = 4'b1010;
+
+		  #10
+          if ((masked_data_o ^ uo_out) != SBOX_LUT[2047 - 8*i-:8]) begin
+            $display("ASSERTION FAILED: uo_out != SBOX_LUT (MASKED)");
+            $finish(1);
+          end
+          uio_in[6] = 0;
 	  end
 
       $finish();
