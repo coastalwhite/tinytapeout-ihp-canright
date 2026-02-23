@@ -47,6 +47,8 @@ module tt_um_coastalwhite_canright_sbox (
   assign uo_out  = data_o;
   assign uio_out = 0;
   assign uio_oe  = 0;
+
+  wire _unused = &{uio_in[7:2], ena, 1'b0};
 endmodule
 
 `define A2X 64'hFF_A9_81_09_48_F2_F3_98
@@ -72,9 +74,9 @@ endmodule
 module aes_mvn(vec, mat, data_o);
     input  [7:0] vec;
     input [63:0] mat;
-    output [7:0] data_o;
+    output reg [7:0] data_o;
 
-    wire  [7:0] c0, c1, c2, c3, c4, c5, c6, c7;
+    reg  [7:0] c0, c1, c2, c3, c4, c5, c6, c7;
 
     integer j;
     always @* begin

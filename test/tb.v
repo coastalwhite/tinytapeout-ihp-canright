@@ -1,5 +1,3 @@
-`include "../src/project.v"
-
 `default_nettype none
 `timescale 1ns / 1ps
 
@@ -84,7 +82,10 @@ module tb ();
           #10
 		  uio_in = 8'b11;
 		  #10
-		  $vogls_assert_eq(uo_out, SBOX_LUT    [2047 - 8*i-:8]);
+          if (uo_out != SBOX_LUT[2047 - 8*i-:8]) begin
+            $display("ASSERTION FAILED in %m: uo_out != SBOX_LUT");
+            $finish(1);
+          end
 	  end
 
       $finish();
