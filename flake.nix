@@ -28,12 +28,15 @@
             pythonPlatform = lib.recursiveUpdate {
               python = pkgs.python311;
             } pkgs.python311Packages;
+            stdenv = pkgs.stdenv;
+						LIBRELANE_TAG = "3.0.0.dev44";
           in {
             devShells.default = pkgs.mkShell {
               packages = with pkgs; [
                 pythonPlatform.python
                 pythonPlatform.venvShellHook
                 pythonPlatform.build
+                pythonPlatform.tkinter
             
                 uv
                 gtkwave
@@ -43,8 +46,17 @@
 
               postVenvCreation = ''
                 unset CONDA_PREFIX 
+                uv pip install -r tt/requirements.txt
+								pip install librelane==${LIBRELANE_TAG}
               '';
               venvDir = ".venv";
+
+							PDK           = "ihp-sg13g2";
+							PDK_ROOT      = "/home/johndoe/Projects/IHP-Open-PDK";
+							LIBRELANE_TAG = LIBRELANE_TAG;
+
+							# fixes libstdc++ issues and libgl.so issues
+							LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib/:${pkgs.expat}/lib/:${pkgs.cairo}/lib/:/run/opengl-driver/lib/";
             };
           };
       });

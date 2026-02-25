@@ -36,7 +36,7 @@ module tt_um_coastalwhite_canright_sbox (
                 4'b0011: mask_i       <= ui_in;
                 4'b0100: prd_i[ 7: 0] <= ui_in;
                 4'b0101: prd_i[15: 8] <= ui_in;
-                4'b0111: prd_i[17:16] <= ui_in[1:0];
+                4'b0110: prd_i[17:16] <= ui_in[1:0];
 
                 4'b1000: data_o  <= sbox_out;
                 4'b1001: data_o  <= masked_sbox_out;
