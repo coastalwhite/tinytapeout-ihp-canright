@@ -13,7 +13,8 @@ workflow.
 
 - [Read the documentation for project](docs/info.md)
 
-[^1]: A very compact Rijndael S-box (David Canright)
-[^2]: A Very Compact "Perfectly Masked" S-Box for AES (David Canright and Lejla Batina)
 [TinyTapeout]: https://tinytapeout.com
 [OpenTitan]: https://github.com/lowRISC/opentitan
+
+[^1]: A very compact Rijndael S-box (David Canright)
+[^2]: A Very Compact "Perfectly Masked" S-Box for AES (David Canright and Lejla Batina)
